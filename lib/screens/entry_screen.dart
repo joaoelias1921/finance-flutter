@@ -1,4 +1,6 @@
 import 'package:finance_flutter/extensions/string_extension.dart';
+import 'package:finance_flutter/models/transaction_model.dart';
+import 'package:finance_flutter/services/transaction_service.dart';
 import 'package:flutter/material.dart';
 
 class EntryScreen extends StatefulWidget {
@@ -9,6 +11,7 @@ class EntryScreen extends StatefulWidget {
 }
 
 class _EntryScreenState extends State<EntryScreen> {
+  final TransactionService _transactionService = TransactionService();
   int _rawValueInCents = 0;
   bool _isExpense = true;
 
@@ -41,7 +44,7 @@ class _EntryScreenState extends State<EntryScreen> {
     });
   }
 
-  void _saveTransaction(CategoryItem category, double amount) {
+  void _saveTransaction(CategoryItem category, double amount) async {
     if (amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -51,11 +54,23 @@ class _EntryScreenState extends State<EntryScreen> {
       return;
     }
 
-    String transactionLabel = _isExpense ? 'Saída' : 'Entrada';
+    final newTransaction = TransactionModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      amount: amount,
+      categoryId: category.id,
+      categoryLabel: category.label,
+      isExpense: _isExpense,
+      date: DateTime.now(),
+    );
+
+    await _transactionService.saveTransaction(newTransaction);
+    if (!mounted) return;
+
+    final typeLabel = _isExpense ? 'Saída' : 'Entrada';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          '$transactionLabel de R\$ $_formattedValue salva em ${category.label.capitalize()}!',
+          '$typeLabel de R\$ $_formattedValue salva em ${category.label.capitalize()}!',
         ),
         backgroundColor: category.color,
       ),

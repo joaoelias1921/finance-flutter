@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/timeline_screen.dart';
 import 'screens/entry_screen.dart';
+import 'screens/history_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,7 +38,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     Center(
       child: Text('Tela de Energia (Insights)', style: TextStyle(fontSize: 24)),
     ),
-    TimelineScreen(),
+    HistoryScreen(),
   ];
 
   @override

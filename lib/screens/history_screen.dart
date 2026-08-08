@@ -1,13 +1,21 @@
+import 'package:finance_flutter/extensions/string_extension.dart';
+import 'package:finance_flutter/models/transaction_model.dart';
+import 'package:finance_flutter/services/transaction_service.dart';
 import 'package:flutter/material.dart';
 
 class Tag {
   final String type;
   const Tag({required this.type});
+
   String get label => switch (type.toLowerCase()) {
     'essential' => 'Essencial',
     'food' => 'Alimentação',
     'fun' => 'Entretenimento',
     'finance' => 'Finanças',
+    'salary' => 'Salário',
+    'freelance' => 'Freelance',
+    'investments' => 'Rendimento',
+    'other_income' => 'Outros',
     _ => 'Diversos',
   };
 }
@@ -28,62 +36,93 @@ class Transaction {
     required this.tag,
     required this.dateSection,
   });
+
+  factory Transaction.fromModel(TransactionModel model) {
+    final double realAmount = model.isExpense ? -model.amount : model.amount;
+    final hour = model.date.hour.toString().padLeft(2, '0');
+    final minute = model.date.minute.toString().padLeft(2, '0');
+    final formattedTime = '$hour:$minute';
+
+    return Transaction(
+      title: model.categoryLabel,
+      category: model.isExpense ? 'Saída' : 'Entrada',
+      time: formattedTime,
+      amount: realAmount,
+      tag: Tag(type: model.categoryId),
+      dateSection: _formatDateSection(model.date),
+    );
+  }
+
+  static String _formatDateSection(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(Duration(days: 1));
+    final itemDate = DateTime(date.year, date.month, date.day);
+
+    if (itemDate == today) {
+      return 'HOJE';
+    } else if (itemDate == yesterday) {
+      return 'ONTEM';
+    } else {
+      final months = [
+        'JANEIRO',
+        'FEVEREIRO',
+        'MARÇO',
+        'ABRIL',
+        'MAIO',
+        'JUNHO',
+        'JULHO',
+        'AGOSTO',
+        'SETEMBRO',
+        'OUTUBRO',
+        'NOVEMBRO',
+        'DEZEMBRO',
+      ];
+      return '${date.day} DE ${months[date.month - 1]}';
+    }
+  }
 }
 
-List<Transaction> mockTransactions = [
-  Transaction(
-    title: 'Supermercado Extra',
-    category: 'Alimentação',
-    time: '14:20',
-    amount: -245.80,
-    tag: Tag(type: 'essential'),
-    dateSection: 'HOJE',
-  ),
-  Transaction(
-    title: 'Salário Mensal',
-    category: 'Renda',
-    time: '09:00',
-    amount: 5200.00,
-    tag: Tag(type: 'finance'),
-    dateSection: 'HOJE',
-  ),
-  Transaction(
-    title: 'Starbucks Coffee',
-    category: 'Lazer',
-    time: '16:45',
-    amount: -18.50,
-    tag: Tag(type: 'food'),
-    dateSection: 'ONTEM',
-  ),
-  Transaction(
-    title: 'Assinatura Netflix',
-    category: 'Entretenimento',
-    time: '02:00',
-    amount: -55.90,
-    tag: Tag(type: 'fun'),
-    dateSection: 'ONTEM',
-  ),
-  Transaction(
-    title: 'Venda de Notebook',
-    category: 'Extra',
-    time: '11:30',
-    amount: 1200.00,
-    tag: Tag(type: 'finance'),
-    dateSection: '12 DE OUTUBRO',
-  ),
-];
+class HistoryScreen extends StatefulWidget {
+  const HistoryScreen({super.key});
 
-class TimelineScreen extends StatelessWidget {
-  const TimelineScreen({super.key});
+  @override
+  State<StatefulWidget> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  final TransactionService _transactionService = TransactionService();
+  bool _isLoading = true;
+  List<Transaction> _transactions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTransactions();
+  }
+
+  Future<void> _loadTransactions() async {
+    setState(() => _isLoading = true);
+    final savedModels = await _transactionService.getTransactions();
+    setState(() {
+      _transactions = savedModels
+          .map((model) => Transaction.fromModel(model))
+          .toList();
+      _isLoading = false;
+    });
+  }
+
+  Map<String, List<Transaction>> get _groupedTransactions {
+    final Map<String, List<Transaction>> grouped = {};
+    for (var transaction in _transactions) {
+      grouped.putIfAbsent(transaction.dateSection, () => []).add(transaction);
+    }
+    return grouped;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, List<Transaction>> groupedTransactions = {};
-    for (var transaction in mockTransactions) {
-      groupedTransactions
-          .putIfAbsent(transaction.dateSection, () => [])
-          .add(transaction);
-    }
+    final grouped = _groupedTransactions;
 
     return Scaffold(
       backgroundColor: Color(0xFFF4F5F7),
@@ -110,28 +149,37 @@ class TimelineScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.search, color: Colors.black, size: 26),
-            onPressed: () {},
+            icon: Icon(Icons.refresh, color: Colors.black, size: 24),
+            onPressed: _loadTransactions, // Permite recarregar manualmente
           ),
           SizedBox(width: 8),
         ],
       ),
-      body: ListView(
-        children: groupedTransactions.entries.expand((entry) {
-          return [
-            SectionHeader(title: entry.key),
-            ...entry.value.map(
-              (transaction) => TransactionCard(
-                title: transaction.title,
-                category: transaction.category,
-                time: transaction.time,
-                amount: transaction.amount,
-                tag: transaction.tag,
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : _transactions.isEmpty
+          ? Center(
+              child: Text(
+                'Nenhuma transação registrada',
+                style: TextStyle(color: Colors.grey),
               ),
+            )
+          : ListView(
+              children: grouped.entries.expand((entry) {
+                return [
+                  SectionHeader(title: entry.key),
+                  ...entry.value.map(
+                    (transaction) => TransactionCard(
+                      title: transaction.title,
+                      category: transaction.category,
+                      time: transaction.time,
+                      amount: transaction.amount,
+                      tag: transaction.tag,
+                    ),
+                  ),
+                ];
+              }).toList(),
             ),
-          ];
-        }).toList(),
-      ),
     );
   }
 }
@@ -182,7 +230,11 @@ class TransactionCard extends StatelessWidget {
       case 'fun':
         return Icons.videogame_asset_outlined;
       case 'finance':
+      case 'investments':
         return Icons.trending_up;
+      case 'salary':
+      case 'freelance':
+        return Icons.payments_outlined;
       default:
         return Icons.attach_money;
     }
@@ -194,7 +246,6 @@ class TransactionCard extends StatelessWidget {
     final String sign = isIncome ? '+ R\$' : '- R\$';
     final String formattedAmount =
         '$sign ${amount.abs().toStringAsFixed(2).replaceAll('.', ',')}';
-
     final Color indicatorColor = isIncome
         ? Color(0xFF66FFA6)
         : Color(0xFFFF7777);
@@ -203,7 +254,7 @@ class TransactionCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 1.5),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(right: BorderSide(color: indicatorColor, width: 4)),
+        border: Border(right: BorderSide(color: indicatorColor, width: 8)),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -223,13 +274,12 @@ class TransactionCard extends StatelessWidget {
               ),
             ),
             SizedBox(width: 16),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    title.capitalize(),
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -242,7 +292,6 @@ class TransactionCard extends StatelessWidget {
                 ],
               ),
             ),
-
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -252,18 +301,16 @@ class TransactionCard extends StatelessWidget {
                 ),
                 SizedBox(height: 4),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: indicatorColor.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Color(0xFFE0E0E0), width: 1),
                   ),
                   child: Text(
                     tag.label,
                     style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
+                      color: isIncome ? Color(0xFF007C34) : Color(0xFF8F0000),
+                      fontSize: 12,
                     ),
                   ),
                 ),
