@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/timeline_screen.dart';
+import 'screens/entry_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,12 +31,10 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int _currentIndex = 2;
+  int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    Center(
-      child: Text('Tela de Entrada (Teclado)', style: TextStyle(fontSize: 24)),
-    ),
+    EntryScreen(),
     Center(
       child: Text('Tela de Energia (Insights)', style: TextStyle(fontSize: 24)),
     ),
