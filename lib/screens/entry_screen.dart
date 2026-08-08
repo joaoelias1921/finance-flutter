@@ -353,7 +353,7 @@ class CategorySelector extends StatefulWidget {
 class _CategorySelectorState extends State<CategorySelector> {
   List<CategoryItem> get _currentCategories {
     if (widget.isExpense) {
-      return const [
+      return [
         CategoryItem(
           id: 'essential',
           label: 'ESSENCIAL',
@@ -380,7 +380,7 @@ class _CategorySelectorState extends State<CategorySelector> {
         ),
       ];
     } else {
-      return const [
+      return [
         CategoryItem(
           id: 'salary',
           label: 'SALÁRIO',

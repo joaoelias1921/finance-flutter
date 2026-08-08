@@ -30,7 +30,7 @@ class Transaction {
   });
 }
 
-const List<Transaction> mockTransactions = [
+List<Transaction> mockTransactions = [
   Transaction(
     title: 'Supermercado Extra',
     category: 'Alimentação',
