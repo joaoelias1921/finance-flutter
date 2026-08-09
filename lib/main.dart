@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/entry_screen.dart';
+import 'screens/entry/entry_screen.dart';
 import 'screens/insights/insights_screen.dart';
 import 'screens/history_screen.dart';
 
