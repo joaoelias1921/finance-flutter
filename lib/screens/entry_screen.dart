@@ -121,9 +121,7 @@ class _EntryScreenState extends State<EntryScreen> {
           ),
         ),
         title: Text(
-          _isLoadingBalance
-              ? 'Saldo: R\$ ...'
-              : 'Saldo: R\$ $_formattedBalance',
+          'Saldo: ${_isLoadingBalance ? 'R\$' : _formattedBalance}',
           style: TextStyle(color: Colors.black, fontSize: 18),
         ),
         centerTitle: true,
