@@ -91,10 +91,3 @@ class _InsightsScreenState extends State<InsightsScreen> {
     );
   }
 }
-
-class CategoryItemData {
-  const CategoryItemData({required this.color, required this.icon});
-
-  final Color color;
-  final IconData icon;
-}

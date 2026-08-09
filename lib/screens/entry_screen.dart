@@ -394,34 +394,33 @@ class _CategorySelectorState extends State<CategorySelector> {
           color: Color(0xFFEF4444),
         ),
       ];
-    } else {
-      return [
-        CategoryItem(
-          id: 'salary',
-          label: 'SALÁRIO',
-          icon: Icons.payments,
-          color: Color(0xFF10B981),
-        ),
-        CategoryItem(
-          id: 'freelance',
-          label: 'FREELANCE',
-          icon: Icons.work,
-          color: Color(0xFF3B82F6),
-        ),
-        CategoryItem(
-          id: 'investments',
-          label: 'RENDIMENTO',
-          icon: Icons.trending_up,
-          color: Color(0xFF8B5CF6),
-        ),
-        CategoryItem(
-          id: 'other_income',
-          label: 'OUTROS',
-          icon: Icons.add_card,
-          color: Color(0xFF6B7280),
-        ),
-      ];
     }
+    return [
+      CategoryItem(
+        id: 'salary',
+        label: 'SALÁRIO',
+        icon: Icons.payments,
+        color: Color(0xFF10B981),
+      ),
+      CategoryItem(
+        id: 'freelance',
+        label: 'FREELANCE',
+        icon: Icons.work,
+        color: Color(0xFF3B82F6),
+      ),
+      CategoryItem(
+        id: 'investments',
+        label: 'RENDIMENTO',
+        icon: Icons.trending_up,
+        color: Color(0xFF8B5CF6),
+      ),
+      CategoryItem(
+        id: 'other_income',
+        label: 'OUTROS',
+        icon: Icons.add_card,
+        color: Color(0xFF6B7280),
+      ),
+    ];
   }
 
   @override

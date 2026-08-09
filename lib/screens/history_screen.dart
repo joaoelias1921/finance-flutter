@@ -157,11 +157,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.delete_forever, color: Colors.redAccent, size: 24),
-            onPressed: _clearTransactions, // Permite recarregar manualmente
+            onPressed: _clearTransactions,
           ),
           IconButton(
             icon: Icon(Icons.refresh, color: Colors.black, size: 24),
-            onPressed: _loadTransactions, // Permite recarregar manualmente
+            onPressed: _loadTransactions,
           ),
           SizedBox(width: 8),
         ],
