@@ -112,6 +112,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
     });
   }
 
+  Future<void> _clearTransactions() async {
+    setState(() => _isLoading = true);
+    await _transactionService.clearAll();
+    _transactions = [];
+    setState(() => _isLoading = false);
+  }
+
   Map<String, List<Transaction>> get _groupedTransactions {
     final Map<String, List<Transaction>> grouped = {};
     for (var transaction in _transactions) {
@@ -148,6 +155,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
         centerTitle: true,
         actions: [
+          IconButton(
+            icon: Icon(Icons.delete_forever, color: Colors.redAccent, size: 24),
+            onPressed: _clearTransactions, // Permite recarregar manualmente
+          ),
           IconButton(
             icon: Icon(Icons.refresh, color: Colors.black, size: 24),
             onPressed: _loadTransactions, // Permite recarregar manualmente

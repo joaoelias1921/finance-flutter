@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/entry_screen.dart';
+import 'screens/insights/insights_screen.dart';
 import 'screens/history_screen.dart';
 
 void main() {
@@ -33,18 +34,22 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [
-    EntryScreen(),
-    Center(
-      child: Text('Tela de Energia (Insights)', style: TextStyle(fontSize: 24)),
-    ),
-    HistoryScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final List<Widget> screens = [
+      const EntryScreen(),
+      InsightsScreen(
+        onNavigateToHistory: () {
+          setState(() {
+            _currentIndex = 2;
+          });
+        },
+      ),
+      const HistoryScreen(),
+    ];
+
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: screens[_currentIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           border: Border(top: BorderSide(color: Color(0xFFE5E5E5), width: 1)),
@@ -74,7 +79,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.bar_chart_outlined),
               activeIcon: Icon(Icons.bar_chart),
-              label: 'Energia',
+              label: 'Termômetro',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.access_time),
