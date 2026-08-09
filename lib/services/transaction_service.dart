@@ -5,6 +5,18 @@ import '../models/transaction_model.dart';
 class TransactionService {
   static const String _storageKey = 'user_transactions';
 
+  Future<List<TransactionModel>> getTransactions() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? data = prefs.getString(_storageKey);
+
+    if (data == null || data.isEmpty) {
+      return [];
+    }
+
+    final List<dynamic> decodedData = jsonDecode(data);
+    return decodedData.map((item) => TransactionModel.fromJson(item)).toList();
+  }
+
   Future<void> saveTransaction(TransactionModel transaction) async {
     final prefs = await SharedPreferences.getInstance();
     final List<TransactionModel> currentList = await getTransactions();
@@ -16,16 +28,18 @@ class TransactionService {
     await prefs.setString(_storageKey, encodedData);
   }
 
-  Future<List<TransactionModel>> getTransactions() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? data = prefs.getString(_storageKey);
+  Future<double> getBalance() async {
+    final transactions = await getTransactions();
+    double balance = 0;
 
-    if (data == null || data.isEmpty) {
-      return [];
+    for (var t in transactions) {
+      if (!t.isExpense) {
+        balance += t.amount;
+        continue;
+      }
+      balance -= t.amount;
     }
-
-    final List<dynamic> decodedData = jsonDecode(data);
-    return decodedData.map((item) => TransactionModel.fromJson(item)).toList();
+    return balance;
   }
 
   Future<void> clearAll() async {

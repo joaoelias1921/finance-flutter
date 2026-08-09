@@ -14,6 +14,8 @@ class _EntryScreenState extends State<EntryScreen> {
   final TransactionService _transactionService = TransactionService();
   int _rawValueInCents = 0;
   bool _isExpense = true;
+  bool _isLoadingBalance = true;
+  double _currentBalance = 0;
 
   String get _formattedValue {
     double value = _rawValueInCents / 100.0;
@@ -23,6 +25,24 @@ class _EntryScreenState extends State<EntryScreen> {
   double get _doubleValue => _rawValueInCents / 100.0;
 
   Color get _activeColor => _isExpense ? Color(0xFFEF4444) : Color(0xFF10B981);
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBalance();
+  }
+
+  Future<void> _loadBalance() async {
+    final balance = await _transactionService.getBalance();
+    setState(() {
+      _currentBalance = balance;
+      _isLoadingBalance = false;
+    });
+  }
+
+  String get _formattedBalance {
+    return 'R\$ ${_currentBalance.toStringAsFixed(2).replaceAll('.', ',')}';
+  }
 
   void _onKeyPress(String key) {
     setState(() {
@@ -64,6 +84,7 @@ class _EntryScreenState extends State<EntryScreen> {
     );
 
     await _transactionService.saveTransaction(newTransaction);
+    await _loadBalance();
     if (!mounted) return;
 
     final typeLabel = _isExpense ? 'Saída' : 'Entrada';
@@ -81,8 +102,6 @@ class _EntryScreenState extends State<EntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String balance = 'R\$ 0,00';
-
     return Scaffold(
       backgroundColor: Color(0xFFF4F5F7),
       appBar: AppBar(
@@ -102,7 +121,9 @@ class _EntryScreenState extends State<EntryScreen> {
           ),
         ),
         title: Text(
-          'Saldo: $balance',
+          _isLoadingBalance
+              ? 'Saldo: R\$ ...'
+              : 'Saldo: R\$ $_formattedBalance',
           style: TextStyle(color: Colors.black, fontSize: 18),
         ),
         centerTitle: true,
