@@ -21,8 +21,8 @@ class HealthSection extends StatelessWidget {
         SizedBox(height: 6),
         Text(
           financialIndex >= 7.0
-              ? 'Suas finanças estão fluindo bem, mas cuidado com os picos de impulso.'
-              : 'Atenção aos gastos! Suas despesas estão pesando no orçamento.',
+              ? 'Suas finanças estão fluindo bem, mas cuidado com os picos de impulso'
+              : 'Atenção aos gastos! Suas despesas estão pesando no orçamento',
           style: TextStyle(fontSize: 13, color: Color(0xFF6B7280), height: 1.3),
         ),
       ],
