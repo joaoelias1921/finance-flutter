@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import '../../../extensions/string_extension.dart';
 
 class AlertCard extends StatelessWidget {
+  final String mostFrequentCategoryName;
+  final int mostFrequentCategoryCount;
+  final VoidCallback onNavigateToHistory;
+
   const AlertCard({
     super.key,
     required this.mostFrequentCategoryCount,
     required this.mostFrequentCategoryName,
     required this.onNavigateToHistory,
   });
-
-  final String mostFrequentCategoryName;
-  final int mostFrequentCategoryCount;
-  final VoidCallback onNavigateToHistory;
 
   @override
   Widget build(BuildContext context) {

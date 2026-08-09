@@ -37,7 +37,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> screens = [
-      const EntryScreen(),
+      EntryScreen(),
       InsightsScreen(
         onNavigateToHistory: () {
           setState(() {
@@ -45,7 +45,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           });
         },
       ),
-      const HistoryScreen(),
+      HistoryScreen(),
     ];
 
     return Scaffold(

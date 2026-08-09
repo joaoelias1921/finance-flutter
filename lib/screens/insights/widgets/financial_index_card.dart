@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class FinancialIndexCard extends StatelessWidget {
+  final double financialIndex;
+  final bool isLastExpense;
+
   const FinancialIndexCard({
     super.key,
     required this.financialIndex,
     required this.isLastExpense,
   });
-
-  final double financialIndex;
-  final bool isLastExpense;
 
   @override
   Widget build(BuildContext context) {

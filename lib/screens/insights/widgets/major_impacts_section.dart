@@ -3,9 +3,9 @@ import '../../../extensions/string_extension.dart';
 import '../insights_calculator.dart';
 
 class MajorImpactsSection extends StatelessWidget {
-  const MajorImpactsSection({super.key, required this.topImpacts});
-
   final List<CategoryImpact> topImpacts;
+
+  const MajorImpactsSection({super.key, required this.topImpacts});
 
   @override
   Widget build(BuildContext context) {

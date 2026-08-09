@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class LargeKeyboard extends StatelessWidget {
+  final Function(String key)? onKeyPressed;
+  final VoidCallback? onDeletePressed;
+
   const LargeKeyboard({
     super.key,
     required this.onKeyPressed,
     required this.onDeletePressed,
   });
-
-  final Function(String key)? onKeyPressed;
-  final VoidCallback? onDeletePressed;
 
   @override
   Widget build(BuildContext context) {

@@ -6,6 +6,7 @@ import 'widgets/section_header.dart';
 
 class Tag {
   final String type;
+
   const Tag({required this.type});
 
   String get label => switch (type.toLowerCase()) {

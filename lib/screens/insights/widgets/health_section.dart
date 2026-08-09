@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class HealthSection extends StatelessWidget {
-  const HealthSection({super.key, required this.financialIndex});
-
   final double financialIndex;
+
+  const HealthSection({super.key, required this.financialIndex});
 
   @override
   Widget build(BuildContext context) {

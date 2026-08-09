@@ -15,14 +15,14 @@ class CategoryItem {
 }
 
 class CategorySelector extends StatelessWidget {
+  final bool isExpense;
+  final Function(CategoryItem category, double amount)? onCategoryDropped;
+
   const CategorySelector({
     super.key,
     required this.isExpense,
     this.onCategoryDropped,
   });
-
-  final bool isExpense;
-  final Function(CategoryItem category, double amount)? onCategoryDropped;
 
   List<CategoryItem> get _currentCategories {
     if (isExpense) {
