@@ -1,11 +1,11 @@
-import 'package:finance_flutter/screens/insights/insights_calculator.dart';
-import 'package:finance_flutter/screens/insights/widgets/alert_card.dart';
-import 'package:finance_flutter/screens/insights/widgets/financial_index_card.dart';
-import 'package:finance_flutter/screens/insights/widgets/health_section.dart';
-import 'package:finance_flutter/screens/insights/widgets/major_impacts_section.dart';
-import 'package:finance_flutter/screens/insights/widgets/thermometer_bar.dart';
 import 'package:flutter/material.dart';
 import '../../services/transaction_service.dart';
+import 'insights_calculator.dart';
+import 'widgets/alert_card.dart';
+import 'widgets/financial_index_card.dart';
+import 'widgets/health_section.dart';
+import 'widgets/major_impacts_section.dart';
+import 'widgets/thermometer_bar.dart';
 
 class InsightsScreen extends StatefulWidget {
   final VoidCallback onNavigateToHistory;

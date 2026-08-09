@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:finance_flutter/extensions/string_extension.dart';
+import '../../../extensions/string_extension.dart';
 
 class AlertCard extends StatelessWidget {
   const AlertCard({

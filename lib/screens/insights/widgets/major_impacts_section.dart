@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:finance_flutter/screens/insights/insights_calculator.dart';
-import 'package:finance_flutter/extensions/string_extension.dart';
+import '../../../extensions/string_extension.dart';
+import '../insights_calculator.dart';
 
 class MajorImpactsSection extends StatelessWidget {
   const MajorImpactsSection({super.key, required this.topImpacts});

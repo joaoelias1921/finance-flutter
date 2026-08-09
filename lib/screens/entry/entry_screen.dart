@@ -1,11 +1,11 @@
-import 'package:finance_flutter/extensions/string_extension.dart';
-import 'package:finance_flutter/models/transaction_model.dart';
-import 'package:finance_flutter/screens/entry/widgets/category_selector.dart';
-import 'package:finance_flutter/screens/entry/widgets/large_keyboard.dart';
-import 'package:finance_flutter/screens/entry/widgets/transaction_type_toggle.dart';
-import 'package:finance_flutter/screens/entry/widgets/value_display.dart';
-import 'package:finance_flutter/services/transaction_service.dart';
 import 'package:flutter/material.dart';
+import '../../extensions/string_extension.dart';
+import '../../models/transaction_model.dart';
+import '../../services/transaction_service.dart';
+import 'widgets/category_selector.dart';
+import 'widgets/large_keyboard.dart';
+import 'widgets/transaction_type_toggle.dart';
+import 'widgets/value_display.dart';
 
 class EntryScreen extends StatefulWidget {
   const EntryScreen({super.key});
